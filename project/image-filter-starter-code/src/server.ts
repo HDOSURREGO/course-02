@@ -14,16 +14,6 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
 
 	// @TODO1 IMPLEMENT A RESTFUL ENDPOINT
 	// GET /filteredimage?image_url={{URL}}
-	app.get("/filteredimage", async (req, res) => {
-		const image_url = req.query.image_url;
-		let filteredImageUrl: string;
-		await filterImageFromURL(image_url).then((path: string) => {
-			filteredImageUrl = path;
-		});
-		res.sendFile(filteredImageUrl);
-
-		// deleteLocalFiles(imgBlackWhite);
-	});
 	// endpoint to filter an image from a public url.
 	// IT SHOULD
 	//    1
@@ -37,6 +27,20 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
 	//   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
 	/**************************************************************************** */
+
+	app.get("/filteredimage", async (req, res) => {
+		const image_url = req.query.image_url;
+		if (!image_url) {
+			return res.send({ image_url: false, message: "no image URL to process" });
+		}
+		let filteredImageFile: string;
+		await filterImageFromURL(image_url).then((path: string) => {
+			filteredImageFile = path;
+		});
+		res.sendFile(filteredImageFile, function () {
+			deleteLocalFiles([filteredImageFile]);
+		});
+	});
 
 	//! END @TODO1
 
