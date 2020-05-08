@@ -13,7 +13,7 @@ spec:
         api: external
     spec:
       containers:
-        - image: hdosurrego/udacity-frontend:local
+        - image: hdosurrego/udacity-frontend
           name: frontend
           imagePullPolicy: Always
           ports:
